@@ -14,41 +14,44 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List todaysHabitList = [
     // [habitName, habitCompleted]
-   [ 'Morning run', false],
+    ['Morning run', false],
     ['Read a book', false],
- ['Meditation', false],
-    ['Practice coding', false]
+    ['Meditation', false],
+    ['Practice coding', false],
   ];
   bool habitCompleted = false;
 
   // сheckbox tapped
   void checkBoxTapped(bool? value, int index) {
     setState(() {
-  habitCompleted = value!;
-  todaysHabitList[index][1]=value;
-  });
-}
+      habitCompleted = value!;
+      todaysHabitList[index][1] = value;
+    });
+  }
 
-// new habit created
+  // new habit created
 
   void createNewHabit() {
-showDialog(context: context, builder: (context){
-  return EnterNewHabitBox();
-// return AlertDialog(
-//   title: const Text('Create New Habit'),
-//   content: TextField(
-//     autofocus: true,
-//     onSubmitted: (newHabitName) {
-//       setState(() {
-//         todaysHabitList.add([newHabitName, false]);
-//       });
-//       Navigator.of(context).pop();
-//     }
-//       ),
-// );
-    },
-  );
-}
+    showDialog(
+      context: context,
+      builder: (context) {
+        return EnterNewHabitBox();
+        // return AlertDialog(
+        //   title: const Text('Create New Habit'),
+        //   content: TextField(
+        //     autofocus: true,
+        //     onSubmitted: (newHabitName) {
+        //       setState(() {
+        //         todaysHabitList.add([newHabitName, false]);
+        //       });
+        //       Navigator.of(context).pop();
+        //     }
+        //       ),
+        // );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,12 +67,12 @@ showDialog(context: context, builder: (context){
           // ),],
           // habit: _habit,
           // onToggle: _handleToggle,
-        return HabitItem(
-          habitName: todaysHabitList[index][0],
-          habitCompleted: todaysHabitList[index][1],
-          onChanged: (value ) => checkBoxTapped(value,index),
-      );
-    },
+          return HabitItem(
+            habitName: todaysHabitList[index][0],
+            habitCompleted: todaysHabitList[index][1],
+            onChanged: (value) => checkBoxTapped(value, index),
+          );
+        },
       ),
     );
   }

@@ -1,5 +1,1 @@
-enum HabitStatus {
-  none,
-  completed,
-  skipped,
-}
+enum HabitStatus { none, completed, skipped }

@@ -28,15 +28,11 @@ class HabitItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
-        children: [
-          Checkbox(
-            value: habitCompleted,
-            onChanged: onChanged,
-          ),
-           Text(habitName),
-        ],
-      ),
-
+          children: [
+            Checkbox(value: habitCompleted, onChanged: onChanged),
+            Text(habitName),
+          ],
+        ),
       ),
     );
   }
