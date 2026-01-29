@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/components/habit_item.dart';
 import '../components/fab_add_item.dart';
-import '../components/new_habit_box.dart';
+import '../components/my_alert_box.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -30,12 +30,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // new habit created
-
+  final _newHabitNameController = TextEditingController();
   void createNewHabit() {
     showDialog(
       context: context,
       builder: (context) {
-        return EnterNewHabitBox();
+        return MyAlertBox(
+          controller: _newHabitNameController,
+          onSave: saveNewHabit,
+          onCancel: cancelDialogBox,
+        );
         // return AlertDialog(
         //   title: const Text('Create New Habit'),
         //   content: TextField(
@@ -50,6 +54,50 @@ class _MyHomePageState extends State<MyHomePage> {
         // );
       },
     );
+  }
+
+  //save new habit
+  void saveNewHabit() {
+    setState(() {
+      todaysHabitList.add([_newHabitNameController.text, false]);
+      _newHabitNameController.clear();
+      Navigator.of(context).pop();
+    });
+  }
+  //cancel new habit
+
+  void cancelDialogBox() {
+    _newHabitNameController.clear();
+    Navigator.of(context).pop();
+  }
+
+  // open habit settings for editing
+  void openHabitSettings(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MyAlertBox(
+          controller: _newHabitNameController,
+          onSave: () => saveExistingHabit(index),
+          onCancel: cancelDialogBox,
+        );
+      },
+    );
+  }
+
+  // save existing habit after editing
+  void saveExistingHabit(int index) {
+    setState(() {
+      todaysHabitList[index][0] = _newHabitNameController.text;
+    });
+    Navigator.pop(context);
+  }
+
+  // delete habit
+  void deleteHabit(int index) {
+    setState(() {
+      todaysHabitList.removeAt(index);
+    });
   }
 
   @override
@@ -71,6 +119,8 @@ class _MyHomePageState extends State<MyHomePage> {
             habitName: todaysHabitList[index][0],
             habitCompleted: todaysHabitList[index][1],
             onChanged: (value) => checkBoxTapped(value, index),
+            settingsTapped: (context) => openHabitSettings(index),
+            deleteTapped: (context) => deleteHabit(index),
           );
         },
       ),
