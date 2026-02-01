@@ -40,7 +40,6 @@ class HabitItem extends StatelessWidget {
             ),
           ],
         ),
-        // startActionPane: ,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.grey[100],

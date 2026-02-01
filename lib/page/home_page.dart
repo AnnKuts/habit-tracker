@@ -3,6 +3,7 @@ import 'package:habit_tracker/components/habit_item.dart';
 import '../components/fab_add_item.dart';
 import '../components/my_alert_box.dart';
 import '../models/habit.dart';
+import '../mixins/loggable.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -12,7 +13,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with Loggable {
   List<Habit> todaysHabitList = [
     Habit(id: '1', name: 'Morning run'),
     Habit(id: '2', name: 'Read a book'),
@@ -20,14 +21,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Habit(id: '4', name: 'Practice coding'),
   ];
 
-  // сheckbox tapped
   void checkBoxTapped(bool? value, int index) {
     setState(() {
       todaysHabitList[index].completed = value ?? false;
     });
   }
 
-  // new habit created
   final _newHabitNameController = TextEditingController();
   void createNewHabit() {
     showDialog(
@@ -39,18 +38,6 @@ class _MyHomePageState extends State<MyHomePage> {
           onSave: saveNewHabit,
           onCancel: cancelDialogBox,
         );
-        // return AlertDialog(
-        //   title: const Text('Create New Habit'),
-        //   content: TextField(
-        //     autofocus: true,
-        //     onSubmitted: (newHabitName) {
-        //       setState(() {
-        //         todaysHabitList.add([newHabitName, false]);
-        //       });
-        //       Navigator.of(context).pop();
-        //     }
-        //       ),
-        // );
       },
     );
   }
@@ -58,7 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   //save new habit
   void saveNewHabit() {
     final name = _newHabitNameController.text.trim();
-    if (name.isEmpty) return;
+    if (name.isEmpty) {
+      logWarning('User tried to create habit with empty name');
+      return;
+    }
+    log('Creating habit: $name');
 
     setState(() {
       todaysHabitList.add(
@@ -68,14 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     Navigator.of(context).pop();
   }
-  //cancel new habit
 
   void cancelDialogBox() {
     _newHabitNameController.clear();
     Navigator.of(context).pop();
   }
 
-  // open habit settings for editing
   void openHabitSettings(int index) {
     _newHabitNameController.text = todaysHabitList[index].name;
     showDialog(
@@ -91,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // save existing habit after editing
   void saveExistingHabit(int index) {
     setState(() {
       todaysHabitList[index].name = _newHabitNameController.text;
@@ -100,8 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pop(context);
   }
 
-  // delete habit
   void deleteHabit(int index) {
+    log('Deleting habit with id: ${todaysHabitList[index].id}');
     setState(() {
       todaysHabitList.removeAt(index);
     });
@@ -115,13 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.builder(
         itemCount: todaysHabitList.length,
         itemBuilder: (contex, index) {
-          // [HabitItem(
-          //   habitName: 'Morning run',
-          //   habitCompleted: habitCompleted,
-          //   onChanged: checkBoxTapped,
-          // ),],
-          // habit: _habit,
-          // onToggle: _handleToggle,
           return HabitItem(
             habit: todaysHabitList[index],
             onChanged: (value) => checkBoxTapped(value, index),

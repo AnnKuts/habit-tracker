@@ -50,11 +50,6 @@ class MyAlertBox extends StatelessWidget {
           color: Colors.pink.shade200,
         ),
       ],
-
-      // autofocus: true,
-      // onSubmitted: (newHabitName) {
-      //   Navigator.of(context).pop();
-      // }
     );
   }
 }
