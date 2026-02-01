@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/components/habit_item.dart';
 import '../components/fab_add_item.dart';
 import '../components/my_alert_box.dart';
+import '../models/habit.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -12,20 +13,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List todaysHabitList = [
-    // [habitName, habitCompleted]
-    ['Morning run', false],
-    ['Read a book', false],
-    ['Meditation', false],
-    ['Practice coding', false],
+  List<Habit> todaysHabitList = [
+    Habit(id: '1', name: 'Morning run'),
+    Habit(id: '2', name: 'Read a book'),
+    Habit(id: '3', name: 'Meditation'),
+    Habit(id: '4', name: 'Practice coding'),
   ];
-  bool habitCompleted = false;
 
   // сheckbox tapped
   void checkBoxTapped(bool? value, int index) {
     setState(() {
-      habitCompleted = value!;
-      todaysHabitList[index][1] = value;
+      todaysHabitList[index].completed = value ?? false;
     });
   }
 
@@ -59,11 +57,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //save new habit
   void saveNewHabit() {
+    final name = _newHabitNameController.text.trim();
+    if (name.isEmpty) return;
+
     setState(() {
-      todaysHabitList.add([_newHabitNameController.text, false]);
+      todaysHabitList.add(
+        Habit(id: DateTime.now().toIso8601String(), name: name),
+      );
       _newHabitNameController.clear();
-      Navigator.of(context).pop();
     });
+    Navigator.of(context).pop();
   }
   //cancel new habit
 
@@ -74,13 +77,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // open habit settings for editing
   void openHabitSettings(int index) {
+    _newHabitNameController.text = todaysHabitList[index].name;
     showDialog(
       context: context,
       builder: (context) {
         return MyAlertBox(
           controller: _newHabitNameController,
-          hintText: todaysHabitList[index][0],
-          hintStyle: TextStyle(color: Colors.grey[300]),
+          hintText: 'Edit habit name',
           onSave: () => saveExistingHabit(index),
           onCancel: cancelDialogBox,
         );
@@ -91,7 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
   // save existing habit after editing
   void saveExistingHabit(int index) {
     setState(() {
-      todaysHabitList[index][0] = _newHabitNameController.text;
+      todaysHabitList[index].name = _newHabitNameController.text;
+      _newHabitNameController.clear();
     });
     Navigator.pop(context);
   }
@@ -119,8 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // habit: _habit,
           // onToggle: _handleToggle,
           return HabitItem(
-            habitName: todaysHabitList[index][0],
-            habitCompleted: todaysHabitList[index][1],
+            habit: todaysHabitList[index],
             onChanged: (value) => checkBoxTapped(value, index),
             settingsTapped: (context) => openHabitSettings(index),
             deleteTapped: (context) => deleteHabit(index),

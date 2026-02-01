@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-// import '../models/habit.dart';
-// import '../models/habit_status.dart';
+import '../models/habit.dart';
 
 class HabitItem extends StatelessWidget {
-  // final Habit habit;
-  // final VoidCallback onToggle;
-  final String habitName;
-  final bool habitCompleted;
+  final Habit habit;
   final Function(bool?)? onChanged;
   final Function(BuildContext)? settingsTapped;
   final Function(BuildContext)? deleteTapped;
 
   const HabitItem({
     super.key,
-    required this.habitName,
-    required this.habitCompleted,
+    required this.habit,
     required this.onChanged,
     required this.settingsTapped,
     required this.deleteTapped,
-    // required this.habit,
-    // required this.onToggle,
   });
 
   @override
@@ -55,8 +48,8 @@ class HabitItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Checkbox(value: habitCompleted, onChanged: onChanged),
-              Text(habitName),
+              Checkbox(value: habit.completed, onChanged: onChanged),
+              Text(habit.name),
             ],
           ),
         ),

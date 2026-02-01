@@ -6,12 +6,16 @@ class MyAlertBox extends StatelessWidget {
   final TextStyle? hintStyle;
   final VoidCallback onSave;
   final VoidCallback onCancel;
+  final Color backgroundColor;
+  final Color buttonColor;
 
   const MyAlertBox({
     super.key,
     required this.controller,
     required this.hintText,
     this.hintStyle,
+    this.backgroundColor = Colors.white,
+    this.buttonColor = const Color(0xFFF48FB1),
     required this.onSave,
     required this.onCancel,
   });
