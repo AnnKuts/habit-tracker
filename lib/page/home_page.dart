@@ -4,6 +4,7 @@ import '../components/fab_add_item.dart';
 import '../components/my_alert_box.dart';
 import '../models/habit.dart';
 import '../mixins/loggable.dart';
+import '../data/habit_local_storage.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -14,17 +15,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with Loggable {
-  List<Habit> todaysHabitList = [
-    Habit(id: '1', name: 'Morning run'),
-    Habit(id: '2', name: 'Read a book'),
-    Habit(id: '3', name: 'Meditation'),
-    Habit(id: '4', name: 'Practice coding'),
-  ];
+  //
+  // List<Habit> todaysHabitList = [
+  //   Habit(id: '1', name: 'Morning run'),
+  //   Habit(id: '2', name: 'Read a book'),
+  //   Habit(id: '3', name: 'Meditation'),
+  //   Habit(id: '4', name: 'Practice coding'),
+  // ];
+  late final HabitLocalStorage habitStorage;
+  late List<Habit> todaysHabitList;
+
+  @override
+  void initState() {
+    super.initState();
+    habitStorage = HabitLocalStorage();
+    todaysHabitList = habitStorage.getHabits();
+    // if(_myBox.)
+    //   super.initState();
+    // }
+  }
 
   void checkBoxTapped(bool? value, int index) {
     setState(() {
       todaysHabitList[index].completed = value ?? false;
     });
+    habitStorage.saveHabits(todaysHabitList);
   }
 
   final _newHabitNameController = TextEditingController();
@@ -52,11 +67,10 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     log('Creating habit: $name');
 
     setState(() {
-      todaysHabitList.add(
-        Habit(id: DateTime.now().toIso8601String(), name: name),
-      );
+      todaysHabitList.add(Habit(name: name));
       _newHabitNameController.clear();
     });
+    habitStorage.saveHabits(todaysHabitList);
     Navigator.of(context).pop();
   }
 
@@ -85,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       todaysHabitList[index].name = _newHabitNameController.text;
       _newHabitNameController.clear();
     });
+    habitStorage.saveHabits(todaysHabitList);
     Navigator.pop(context);
   }
 
@@ -93,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     setState(() {
       todaysHabitList.removeAt(index);
     });
+    habitStorage.saveHabits(todaysHabitList);
   }
 
   @override
