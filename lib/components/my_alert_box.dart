@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
 class MyAlertBox extends StatelessWidget {
-  final controller;
+  final TextEditingController controller;
+  final String hintText;
+  final TextStyle? hintStyle;
   final VoidCallback onSave;
   final VoidCallback onCancel;
 
   const MyAlertBox({
     super.key,
     required this.controller,
+    required this.hintText,
+    this.hintStyle,
     required this.onSave,
     required this.onCancel,
   });
@@ -17,9 +21,11 @@ class MyAlertBox extends StatelessWidget {
     //change it to another widget later
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: const Text('Enter new habit'),
       content: TextField(
+        controller: controller,
         decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: hintStyle,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.pink.shade200),
           ),
