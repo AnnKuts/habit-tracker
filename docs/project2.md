@@ -1,0 +1,187 @@
+## The task:
+
+ 
+> Створити застосунок на Dart, в якому продемонструвати:
+> 1) Оператори "синтаксичного цукру". Наприклад оператор "??="
+> 2) Використання лямбда-функцій, замикань
+> 3) Використання параметрів за замовчуванням
+> 4) Різні варіанти конструкторів:
+> 4.1) Фабричний конструктор
+> 4.2) Конструктор ініціалізації
+> 5) Використання міксинів
+> 6) Використання ключового слова assert
+> 7) Робота з різними типами колекцій.
+
+
+## Realization:
+
+1) Оператори "синтаксичного цукру". Наприклад оператор "??="
+
+_implementation_ :
+
+```dart  
+//lib/data/habit_local_storage.dart
+List<Habit> getHabits() {
+  var raw = _box.get(_habitsKey);
+  raw ??= _initDefaults();
+  return (raw as List).map((item) => Habit.fromList(item)).toList();
+  }
+```
+
+```dart
+// lib/page/home_page.dart
+void checkBoxTapped(bool? value, int index) {
+    setState(() {
+      todaysHabitList[index].completed = value ?? false;
+    });
+    habitStorage.saveHabits(todaysHabitList);
+  }
+```
+
+2) Використання лямбда-функцій, замикань
+
+_implementation_
+```dart
+// lib/page/home_page.dart
+  void openHabitSettings(int index) {
+  _newHabitNameController.text = todaysHabitList[index].name;
+  showDialog(
+    context: context,
+    builder: (context) {
+      return MyAlertBox(
+        controller: _newHabitNameController,
+        hintText: 'Edit habit name',
+        onSave: () => saveExistingHabit(index),
+        onCancel: cancelDialogBox,
+      );
+    },
+  );
+}
+//...
+void createNewHabit() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return MyAlertBox(
+        controller: _newHabitNameController,
+        hintText: 'Enter habit name here...',
+        onSave: saveNewHabit,
+        onCancel: cancelDialogBox,
+      );
+    },
+  );
+}
+//...
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.grey[300],
+    floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
+    body: ListView.builder(
+      itemCount: todaysHabitList.length,
+      itemBuilder: (contex, index) {
+        return HabitItem(
+          habit: todaysHabitList[index],
+          onChanged: (value) => checkBoxTapped(value, index),
+          settingsTapped: (context) => openHabitSettings(index),
+          deleteTapped: (context) => deleteHabit(index),
+        );
+      },
+    ),
+  );
+}
+
+//...
+```
+3) Використання параметрів за замовчуванням
+_implementation_
+```dart
+// lib/widgets/my_alert_box.dart
+  const MyAlertBox({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.hintStyle,
+    this.backgroundColor = Colors.white,
+    this.buttonColor = const Color(0xFFF48FB1),
+    required this.onSave,
+    required this.onCancel,
+  });
+```
+```dart
+// lib/models/habit.dart```
+  Habit({
+    required this.id,
+    required this.name,
+    this.completed = false,
+  });
+```
+4) Різні варіанти конструкторів
+
+4.1) Фабричний конструктор
+
+_implementation_
+```dart
+// lib/models/habit.dart
+   factory Habit.fromList(List<dynamic> data) {
+    return Habit(
+      id: data[0] as String,
+      name: data[1] as String,
+      completed: data[2] as bool,
+    );
+  }
+  ```
+4.2) Конструктор ініціалізації
+_implementation_
+```dart
+// lib/models/habit.dart
+  Habit({
+    required this.id,
+    required this.name,
+    this.completed = false,
+  });
+```
+5) Використання міксинів
+_implementation_
+```dart
+// lib/mixins/logger.dart
+mixin Logger {
+  void log(String message) {
+    final timestamp = DateTime.now().toIso8601String();
+    print('[$timestamp] $message');
+  }
+}
+```
+6) Використання ключового слова assert
+_implementation_
+```dart
+// lib/models/habit.dart
+  Habit({String? id, required String name, this.completed = false})
+    : id = id ?? _uuid.v4(),
+      assert(name.trim().isNotEmpty, 'Habit name cannot be empty'),
+      name = name.trim();
+```
+7) Робота з різними типами колекцій.
+_implementation_
+
+```dart
+//lib/page/home_page.dart
+late List<Habit> todaysHabitList;
+```
+```dart
+// lib/data/habit_local_storage.dart
+
+List<Habit> getHabits() {
+  var raw = _box.get(_habitsKey);
+  raw ??= _initDefaults();
+  return (raw as List).map((item) => Habit.fromList(item)).toList();
+}
+
+//...
+List<List<dynamic>> _initDefaults() {
+final defaults = _createDefaultHabits();
+final data = defaults.map((h) => h.toList()).toList();
+_box.put(_habitsKey, data);
+return data;
+}
+```

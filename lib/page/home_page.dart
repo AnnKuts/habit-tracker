@@ -15,13 +15,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with Loggable {
-  //
-  // List<Habit> todaysHabitList = [
-  //   Habit(id: '1', name: 'Morning run'),
-  //   Habit(id: '2', name: 'Read a book'),
-  //   Habit(id: '3', name: 'Meditation'),
-  //   Habit(id: '4', name: 'Practice coding'),
-  // ];
   late final HabitLocalStorage habitStorage;
   late List<Habit> todaysHabitList;
 
@@ -30,9 +23,6 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     super.initState();
     habitStorage = HabitLocalStorage();
     todaysHabitList = habitStorage.getHabits();
-    // if(_myBox.)
-    //   super.initState();
-    // }
   }
 
   void checkBoxTapped(bool? value, int index) {
@@ -57,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     );
   }
 
-  //save new habit
   void saveNewHabit() {
     final name = _newHabitNameController.text.trim();
     if (name.isEmpty) {
@@ -70,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       todaysHabitList.add(Habit(name: name));
       _newHabitNameController.clear();
     });
+
     habitStorage.saveHabits(todaysHabitList);
     Navigator.of(context).pop();
   }
@@ -97,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
   void saveExistingHabit(int index) {
     setState(() {
       todaysHabitList[index].name = _newHabitNameController.text;
+      _newHabitNameController.clear();
       _newHabitNameController.clear();
     });
     habitStorage.saveHabits(todaysHabitList);

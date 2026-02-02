@@ -3,14 +3,17 @@ import '../models/habit.dart';
 
 class HabitLocalStorage {
   final Box _box = Hive.box('habits_box');
-  static const String _habitsKey = 'HABITS';
+  static const String _habitsKey = 'CURRENT_HABIT_LIST';
+
+  ///myBox.get(yyyyMMdd) - habit list for a specific day
+  ///myBox.get('START_DATE') - (first day of tracking)
+  ///myBox.get('CURRENT_HABIT_LIST') - latest habit list
+  ///myBox.get('PERCENTAGE_SUMMARY_yyyyMMdd')
 
   List<Habit> getHabits() {
     var raw = _box.get(_habitsKey);
     raw ??= _initDefaults();
-    return (raw as List)
-        .map((item) => Habit.fromList(item))
-        .toList();
+    return (raw as List).map((item) => Habit.fromList(item)).toList();
   }
 
   void saveHabits(List<Habit> habits) {
