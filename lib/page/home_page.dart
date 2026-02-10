@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/components/habit_item.dart';
-import '../components/fab_add_item.dart';
-import '../components/my_alert_box.dart';
+import 'package:habit_tracker/widgets/habit_item.dart';
+import '../widgets/fab_add_item.dart';
+import '../widgets/my_alert_box.dart';
 import '../models/habit.dart';
 import '../mixins/loggable.dart';
 import '../data/habit_local_storage.dart';
+import '../components/month_summary.dart';
+
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -23,13 +25,16 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     super.initState();
     habitStorage = HabitLocalStorage();
     todaysHabitList = habitStorage.getHabits();
+    habitStorage.loadHeatMap();
   }
 
   void checkBoxTapped(bool? value, int index) {
     setState(() {
       todaysHabitList[index].completed = value ?? false;
     });
-    habitStorage.saveHabits(todaysHabitList);
+    habitStorage.updateDatabase(
+      todaysHabitList.map((h) => h.toList()).toList(),
+    );
   }
 
   final _newHabitNameController = TextEditingController();
@@ -61,6 +66,9 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     });
 
     habitStorage.saveHabits(todaysHabitList);
+    habitStorage.updateDatabase(
+      todaysHabitList.map((h) => h.toList()).toList(),
+    );
     Navigator.of(context).pop();
   }
 
@@ -91,6 +99,9 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       _newHabitNameController.clear();
     });
     habitStorage.saveHabits(todaysHabitList);
+    habitStorage.updateDatabase(
+      todaysHabitList.map((h) => h.toList()).toList(),
+    );
     Navigator.pop(context);
   }
 
@@ -107,16 +118,24 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
-      body: ListView.builder(
-        itemCount: todaysHabitList.length,
-        itemBuilder: (contex, index) {
-          return HabitItem(
-            habit: todaysHabitList[index],
-            onChanged: (value) => checkBoxTapped(value, index),
-            settingsTapped: (context) => openHabitSettings(index),
-            deleteTapped: (context) => deleteHabit(index),
-          );
-        },
+      body: ListView(
+        children: [
+          MonthlySummary(datasets: habitStorage.heatMapDataSet, startDate: habitStorage.getStartDate()),
+
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: todaysHabitList.length,
+          itemBuilder: (contex, index) {
+            return HabitItem(
+              habit: todaysHabitList[index],
+              onChanged: (value) => checkBoxTapped(value, index),
+              settingsTapped: (context) => openHabitSettings(index),
+              deleteTapped: (context) => deleteHabit(index),
+            );
+          },
+        )
+        ]
       ),
     );
   }
