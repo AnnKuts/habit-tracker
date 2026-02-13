@@ -7,6 +7,7 @@ class HabitLocalStorage {
   static const String _habitsKey = 'CURRENT_HABIT_LIST';
   static const String _startDateKey = 'START_DATE';
   Map<DateTime, int> heatMapDataSet = {};
+
   ///myBox.get(yyyyMMdd) - habit list for a specific day
   ///myBox.get('START_DATE') - (first day of tracking)
   ///myBox.get('CURRENT_HABIT_LIST') - latest habit list
@@ -16,6 +17,25 @@ class HabitLocalStorage {
     var raw = _box.get(_habitsKey);
     raw ??= _initDefaults();
     return (raw as List).map((item) => Habit.fromList(item)).toList();
+  }
+
+  Map<String, Habit> getHabitsAsMap() {
+    final habitsList = getHabits();
+    return {for (var habit in habitsList) habit.id: habit};
+  }
+
+  Habit? findHabitById(String id) {
+    final habitsMap = getHabitsAsMap();
+    return habitsMap[id];
+  }
+
+  void _checkForNewDay() {
+    final String todayKey = todaysDateFormatted();
+    if (!_box.containsKey(todayKey)) {
+      final List<List<dynamic>> previousList =
+          _box.get('CURRENT_HABIT_LIST') ?? [];
+      _box.put(todayKey, previousList);
+    }
   }
 
   void saveHabits(List<Habit> habits) {
@@ -55,7 +75,6 @@ class HabitLocalStorage {
     return data;
   }
 
-
   void updateDatabase(List<List<dynamic>> todaysHabitList) {
     _box.put(todaysDateFormatted(), todaysHabitList);
     _box.put('CURRENT_HABIT_LIST', todaysHabitList);
@@ -77,17 +96,14 @@ class HabitLocalStorage {
         : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
 
     _box.put('PERCENTAGE_SUMMARY_${todaysDateFormatted()}', percent);
-
   }
 
   void loadHeatMap() {
     heatMapDataSet.clear();
 
-    final DateTime startDate =
-    createDataTimeObject(getStartDate());
+    final DateTime startDate = createDataTimeObject(getStartDate());
 
-    final int daysInBetween =
-        DateTime.now().difference(startDate).inDays;
+    final int daysInBetween = DateTime.now().difference(startDate).inDays;
 
     for (int i = 0; i <= daysInBetween; i++) {
       final DateTime currentDate = startDate.add(Duration(days: i));

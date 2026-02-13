@@ -7,7 +7,6 @@ import '../mixins/loggable.dart';
 import '../data/habit_local_storage.dart';
 import '../components/month_summary.dart';
 
-
 class MyHomePage extends StatefulWidget {
   final String title;
   const MyHomePage({super.key, required this.title});
@@ -38,6 +37,13 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
   }
 
   final _newHabitNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _newHabitNameController.dispose();
+    super.dispose();
+  }
+
   void createNewHabit() {
     showDialog(
       context: context,
@@ -120,22 +126,25 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
       body: ListView(
         children: [
-          MonthlySummary(datasets: habitStorage.heatMapDataSet, startDate: habitStorage.getStartDate()),
+          MonthlySummary(
+            datasets: habitStorage.heatMapDataSet,
+            startDate: habitStorage.getStartDate(),
+          ),
 
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: todaysHabitList.length,
-          itemBuilder: (contex, index) {
-            return HabitItem(
-              habit: todaysHabitList[index],
-              onChanged: (value) => checkBoxTapped(value, index),
-              settingsTapped: (context) => openHabitSettings(index),
-              deleteTapped: (context) => deleteHabit(index),
-            );
-          },
-        )
-        ]
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: todaysHabitList.length,
+            itemBuilder: (contex, index) {
+              return HabitItem(
+                habit: todaysHabitList[index],
+                onChanged: (value) => checkBoxTapped(value, index),
+                settingsTapped: (context) => openHabitSettings(index),
+                deleteTapped: (context) => deleteHabit(index),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
