@@ -30,11 +30,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     super.initState();
     habitStorage = HabitLocalStorage();
     todaysHabitList = habitStorage.getHabits();
-
-    Future.microtask(() {
-      habitStorage.loadHeatMap();
-      if (mounted) setState(() {});
-    });
+    habitStorage.loadHeatMap();
   }
 
   @override
@@ -43,11 +39,9 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     super.dispose();
   }
 
-
   List<Habit> get currentHabits =>
       selectedDate != null ? selectedDateHabits : todaysHabitList;
   bool get isViewingToday => selectedDate == null;
-
 
   void checkBoxTapped(bool? value, int index) {
     setState(() {
@@ -79,15 +73,12 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     _saveCurrentHabits();
   }
 
-
   void _saveNewHabit() {
     final name = HabitValidator.normalizeName(_newHabitNameController.text);
-
     if (!HabitValidator.isValidName(name)) {
       logWarning('User tried to create habit with empty name');
       return;
     }
-
     if (HabitValidator.nameExists(name, currentHabits)) {
       logWarning('Habit with this name already exists');
       return;
@@ -127,7 +118,6 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       habitStorage.saveHabitsForDate(selectedDate!, selectedDateHabits);
     }
   }
-
 
   void _showHabitDialog({
     required VoidCallback onSave,

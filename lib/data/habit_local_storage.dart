@@ -57,7 +57,10 @@ class HabitLocalStorage {
         date.day == now.day;
   }
 
-  void calculateHabitPercentage(List<List<dynamic>> todaysHabitList, [String? dateKey]) {
+  void calculateHabitPercentage(
+    List<List<dynamic>> todaysHabitList, [
+    String? dateKey,
+  ]) {
     int countCompleted = 0;
 
     for (int i = 0; i < todaysHabitList.length; i++) {
@@ -164,7 +167,8 @@ class HabitLocalStorage {
   }
 
   void updateHeatMapForDate(DateTime date, String dateKey) {
-    final String percentString = _box.get('PERCENTAGE_SUMMARY_$dateKey') ?? '0.0';
+    final String percentString =
+        _box.get('PERCENTAGE_SUMMARY_$dateKey') ?? '0.0';
     final double percent = double.parse(percentString);
     final DateTime normalizedDate = DateTime(date.year, date.month, date.day);
     heatMapDataSet[normalizedDate] = (percent * 10).toInt();

@@ -22,7 +22,7 @@ class HabitItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Slidable(
         endActionPane: ActionPane(
-          motion: StretchMotion(),
+          motion: const StretchMotion(),
           children: [
             //settings option
             SlidableAction(
@@ -41,17 +41,27 @@ class HabitItem extends StatelessWidget {
           ],
         ),
         child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: Colors.grey[100],
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey.shade300,
-            ),
+            border: Border.all(color: Colors.grey.shade300),
           ),
           child: Row(
             children: [
-              Checkbox(value: habit.completed, onChanged: onChanged),
-              Text(habit.name),
+              Checkbox(
+                value: habit.completed,
+                onChanged: onChanged,
+              ),
+              Expanded(
+                child: Text(
+                  habit.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

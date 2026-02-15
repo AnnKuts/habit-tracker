@@ -23,35 +23,35 @@ class MonthlySummary extends StatelessWidget {
       child: Stack(
         children: [
           HeatMap(
-        startDate: createDataTimeObject(startDate),
-        endDate: DateTime.now().add(const Duration(days: 0)),
-        datasets: datasets,
-        colorMode: ColorMode.color,
-        defaultColor: Colors.grey[200],
-        textColor: Colors.black,
-        showColorTip: false,
-        showText: true,
-        scrollable: true,
-        size: 30,
-        onClick: (date) {
-          if (onDateTapped != null) {
-            onDateTapped!(date);
-          }
-        },
-        colorsets: const {
-          1: Color(0xFFFFEBEE),
-          2: Color(0xFFFFCDD2),
-          3: Color(0xFFEF9A9A),
-          4: Color(0xFFE57373),
-          5: Color(0xFFEF5350),
-          6: Color(0xFFE91E63),
-          7: Color(0xFFD81B60),
-          8: Color(0xFFC2185B),
-          9: Color(0xFFAD1457),
-          10: Color(0xFF880E4F),
-        },
-      ),
-    ]
+            startDate: createDataTimeObject(startDate),
+            endDate: DateTime.now().add(const Duration(days: 0)),
+            datasets: datasets,
+            colorMode: ColorMode.color,
+            defaultColor: Colors.grey[200],
+            textColor: Colors.black,
+            showColorTip: false,
+            showText: true,
+            scrollable: true,
+            size: 30,
+            onClick: (date) {
+              if (onDateTapped != null) {
+                onDateTapped!(date);
+              }
+            },
+            colorsets: const {
+              1: Color(0xFFFFEBEE),
+              2: Color(0xFFFFCDD2),
+              3: Color(0xFFEF9A9A),
+              4: Color(0xFFE57373),
+              5: Color(0xFFEF5350),
+              6: Color(0xFFE91E63),
+              7: Color(0xFFD81B60),
+              8: Color(0xFFC2185B),
+              9: Color(0xFFAD1457),
+              10: Color(0xFF880E4F),
+            },
+          ),
+        ],
       ),
     );
   }

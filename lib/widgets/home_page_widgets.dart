@@ -13,11 +13,7 @@ class HomePageWidgets {
         color: Colors.pink[50],
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 3,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.grey, blurRadius: 3, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -26,10 +22,7 @@ class HomePageWidgets {
         children: [
           Text(
             formatDateDisplay(date),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           ElevatedButton.icon(
             onPressed: onResetToToday,
