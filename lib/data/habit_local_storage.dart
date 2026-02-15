@@ -8,11 +8,6 @@ class HabitLocalStorage {
   static const String _startDateKey = 'START_DATE';
   Map<DateTime, int> heatMapDataSet = {};
 
-  ///myBox.get(yyyyMMdd) - habit list for a specific day
-  ///myBox.get('START_DATE') - (first day of tracking)
-  ///myBox.get('CURRENT_HABIT_LIST') - latest habit list
-  ///myBox.get('PERCENTAGE_SUMMARY_yyyyMMdd')
-
   List<Habit> getHabits() {
     var raw = _box.get(_habitsKey);
     raw ??= _initDefaults();
@@ -29,6 +24,18 @@ class HabitLocalStorage {
     return habitsMap[id];
   }
 
+  List<Habit> getHabitsForDate(DateTime date) {
+    final dateKey = dateTimeToString(date);
+    var raw = _box.get(dateKey);
+
+    if (raw == null) {
+      raw = _box.get(_habitsKey);
+      if (raw == null) return [];
+    }
+
+    return (raw as List).map((item) => Habit.fromList(item)).toList();
+  }
+
   void _checkForNewDay() {
     final String todayKey = todaysDateFormatted();
     if (!_box.containsKey(todayKey)) {
@@ -36,6 +43,42 @@ class HabitLocalStorage {
           _box.get('CURRENT_HABIT_LIST') ?? [];
       _box.put(todayKey, previousList);
     }
+  }
+
+  void saveHabitsForDate(DateTime date, List<Habit> habits) {
+    final dateKey = dateTimeToString(date);
+    final data = habits.map((h) => h.toList()).toList();
+
+    _box.put(dateKey, data);
+    if (_isToday(date)) {
+      _box.put(_habitsKey, data);
+    }
+    calculateHabitPercentage(data, dateKey);
+    loadHeatMap();
+  }
+
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
+
+  void calculateHabitPercentage(List<List<dynamic>> todaysHabitList, [String? dateKey]) {
+    int countCompleted = 0;
+
+    for (int i = 0; i < todaysHabitList.length; i++) {
+      if (todaysHabitList[i][2] == true) {
+        countCompleted++;
+      }
+    }
+
+    final percent = todaysHabitList.isEmpty
+        ? '0.0'
+        : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
+
+    final key = dateKey ?? todaysDateFormatted();
+    _box.put('PERCENTAGE_SUMMARY_$key', percent);
   }
 
   void saveHabits(List<Habit> habits) {
@@ -82,21 +125,21 @@ class HabitLocalStorage {
     loadHeatMap();
   }
 
-  void calculateHabitPercentage(List<List<dynamic>> todaysHabitList) {
-    int countCompleted = 0;
-
-    for (int i = 0; i < todaysHabitList.length; i++) {
-      if (todaysHabitList[i][2] == true) {
-        countCompleted++;
-      }
-    }
-
-    final percent = todaysHabitList.isEmpty
-        ? '0.0'
-        : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
-
-    _box.put('PERCENTAGE_SUMMARY_${todaysDateFormatted()}', percent);
-  }
+  // void calculateHabitPercentage(List<List<dynamic>> todaysHabitList) {
+  //   int countCompleted = 0;
+  //
+  //   for (int i = 0; i < todaysHabitList.length; i++) {
+  //     if (todaysHabitList[i][2] == true) {
+  //       countCompleted++;
+  //     }
+  //   }
+  //
+  //   final percent = todaysHabitList.isEmpty
+  //       ? '0.0'
+  //       : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
+  //
+  //   _box.put('PERCENTAGE_SUMMARY_${todaysDateFormatted()}', percent);
+  // }
 
   void loadHeatMap() {
     heatMapDataSet.clear();
