@@ -25,7 +25,8 @@ class HabitLocalStorage {
   }
 
   List<Habit> getHabitsForDate(DateTime date) {
-    final dateKey = dateTimeToString(date);
+    final normalizedDate = DateTime(date.year, date.month, date.day);
+    final dateKey = dateTimeToString(normalizedDate);
     var raw = _box.get(dateKey);
 
     if (raw == null) {
@@ -36,25 +37,17 @@ class HabitLocalStorage {
     return (raw as List).map((item) => Habit.fromList(item)).toList();
   }
 
-  void _checkForNewDay() {
-    final String todayKey = todaysDateFormatted();
-    if (!_box.containsKey(todayKey)) {
-      final List<List<dynamic>> previousList =
-          _box.get('CURRENT_HABIT_LIST') ?? [];
-      _box.put(todayKey, previousList);
-    }
-  }
-
   void saveHabitsForDate(DateTime date, List<Habit> habits) {
-    final dateKey = dateTimeToString(date);
+    final normalizedDate = DateTime(date.year, date.month, date.day);
+    final dateKey = dateTimeToString(normalizedDate);
     final data = habits.map((h) => h.toList()).toList();
 
     _box.put(dateKey, data);
-    if (_isToday(date)) {
+    if (_isToday(normalizedDate)) {
       _box.put(_habitsKey, data);
     }
     calculateHabitPercentage(data, dateKey);
-    loadHeatMap();
+    updateHeatMapForDate(normalizedDate, dateKey);
   }
 
   bool _isToday(DateTime date) {
@@ -119,10 +112,13 @@ class HabitLocalStorage {
   }
 
   void updateDatabase(List<List<dynamic>> todaysHabitList) {
-    _box.put(todaysDateFormatted(), todaysHabitList);
+    final dateKey = todaysDateFormatted();
+    _box.put(dateKey, todaysHabitList);
     _box.put('CURRENT_HABIT_LIST', todaysHabitList);
     calculateHabitPercentage(todaysHabitList);
-    loadHeatMap();
+    final now = DateTime.now();
+    final normalizedDate = DateTime(now.year, now.month, now.day);
+    updateHeatMapForDate(normalizedDate, dateKey);
   }
 
   // void calculateHabitPercentage(List<List<dynamic>> todaysHabitList) {
@@ -165,5 +161,12 @@ class HabitLocalStorage {
 
       heatMapDataSet[normalizedDate] = (percent * 10).toInt();
     }
+  }
+
+  void updateHeatMapForDate(DateTime date, String dateKey) {
+    final String percentString = _box.get('PERCENTAGE_SUMMARY_$dateKey') ?? '0.0';
+    final double percent = double.parse(percentString);
+    final DateTime normalizedDate = DateTime(date.year, date.month, date.day);
+    heatMapDataSet[normalizedDate] = (percent * 10).toInt();
   }
 }

@@ -20,7 +20,9 @@ class MonthlySummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 20, bottom: 20),
-      child: HeatMap(
+      child: Stack(
+        children: [
+          HeatMap(
         startDate: createDataTimeObject(startDate),
         endDate: DateTime.now().add(const Duration(days: 0)),
         datasets: datasets,
@@ -48,6 +50,8 @@ class MonthlySummary extends StatelessWidget {
           9: Color(0xFFAD1457),
           10: Color(0xFF880E4F),
         },
+      ),
+    ]
       ),
     );
   }
