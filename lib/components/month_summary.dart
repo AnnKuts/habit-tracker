@@ -19,7 +19,7 @@ class MonthlySummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 20, bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Stack(
         children: [
           HeatMap(

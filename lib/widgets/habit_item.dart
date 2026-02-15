@@ -19,7 +19,7 @@ class HabitItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Slidable(
         endActionPane: ActionPane(
           motion: StretchMotion(),
@@ -44,6 +44,9 @@ class HabitItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.grey[100],
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.grey.shade300,
+            ),
           ),
           child: Row(
             children: [
