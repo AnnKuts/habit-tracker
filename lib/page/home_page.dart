@@ -158,8 +158,10 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: scheme.surface,
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
       body: ListView.builder(
         itemCount: _calculateItemCount(),
@@ -181,6 +183,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
 
     if (index == 1 && selectedDate != null) {
       return HomePageWidgets.buildSelectedDateCard(
+        context: context,
         date: selectedDate!,
         onResetToToday: resetToToday,
       );

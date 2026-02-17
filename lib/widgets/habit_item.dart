@@ -18,48 +18,70 @@ class HabitItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),
+          extentRatio: 0.45,
           children: [
             //settings option
-            SlidableAction(
-              onPressed: settingsTapped,
-              backgroundColor: Colors.grey.shade800,
-              icon: Icons.settings,
-              borderRadius: BorderRadius.circular(12),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Material(
+                  elevation: 0,
+                  borderRadius: BorderRadius.circular(12),
+                  color: scheme.secondaryContainer,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => settingsTapped?.call(context),
+                    child: Center(
+                      child: Icon(
+                        Icons.settings,
+                        color: scheme.onSecondaryContainer,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
+
             //delete option
-            SlidableAction(
-              onPressed: deleteTapped,
-              backgroundColor: Colors.red.shade400,
-              icon: Icons.delete,
-              borderRadius: BorderRadius.circular(12),
+            Expanded(
+              child: Material(
+                elevation: 0,
+                borderRadius: BorderRadius.circular(12),
+                color: scheme.errorContainer,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => deleteTapped?.call(context),
+                  child: Center(
+                    child: Icon(Icons.delete, color: scheme.onErrorContainer),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
+
         child: Container(
+          margin: const EdgeInsets.only(right: 8),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: scheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: scheme.outlineVariant),
           ),
           child: Row(
             children: [
-              Checkbox(
-                value: habit.completed,
-                onChanged: onChanged,
-              ),
+              Checkbox(value: habit.completed, onChanged: onChanged),
               Expanded(
                 child: Text(
                   habit.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ],
