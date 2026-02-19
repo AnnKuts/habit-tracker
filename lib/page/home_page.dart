@@ -221,7 +221,8 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
 
     return Scaffold(
       backgroundColor: scheme.surface,
@@ -230,53 +231,48 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
         elevation: 0,
         iconTheme: IconThemeData(color: scheme.onSurface),
       ),
-      drawer: Drawer(
-        backgroundColor: scheme.surface,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: scheme.primaryContainer,
+
+      drawer: NavigationDrawer(
+        onDestinationSelected: (int index) {
+          Navigator.pop(context);
+
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsPage(
+                  title: 'Settings',
+                  isDarkMode: widget.isDarkMode,
+                  onThemeChanged: widget.onThemeChanged,
+                  appColor: widget.appColor,
+                  onColorChanged: widget.onColorChanged,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    'Menu',
-                    style: TextStyle(
-                      color: scheme.onPrimaryContainer,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+            );
+          }
+        },
+        selectedIndex: null,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 28, 28, 16),
+            child: Text(
+              'Menu',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: scheme.primary,
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.settings, color: scheme.onSurfaceVariant),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsPage(
-                      title: 'Settings',
-                      isDarkMode: widget.isDarkMode,
-                      onThemeChanged: widget.onThemeChanged,
-                      appColor: widget.appColor,
-                      onColorChanged: widget.onColorChanged,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+          const Divider(indent: 28, endIndent: 28),
+          const SizedBox(height: 10),
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: Text('Settings'),
+          ),
+        ],
       ),
+
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
       body: ListView.builder(
         itemCount: _calculateItemCount(),
