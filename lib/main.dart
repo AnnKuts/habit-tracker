@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/page/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/page/settings_page.dart';
+import 'package:habit_tracker/page/navigation_page.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -52,8 +53,13 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       // home: MyHomePage(title: 'Habit Tracker'),
-      home: SettingsPage(
-        title: 'Settings',
+      // home: SettingsPage(
+      //   title: 'Settings',
+      //   isDarkMode: isDarkMode,
+      //   onThemeChanged: findTheme,
+      //   appColor: seedColor,
+      //   onColorChanged: changeColor,
+      home: MainNavigationPage(
         isDarkMode: isDarkMode,
         onThemeChanged: findTheme,
         appColor: seedColor,
