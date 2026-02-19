@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/page/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/page/settings_page.dart';
+
 
 void main() async {
   await Hive.initFlutter();
@@ -8,18 +10,48 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isDarkMode = false;
+
+  void findTheme(bool value) {
+    setState(() {
+      isDarkMode = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Habit Tracker',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink.shade200),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink.shade200,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: 'Habit Tracker'),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink.shade200,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      // home: MyHomePage(title: 'Habit Tracker'),
+      home: SettingsPage(
+        title: 'Settings',
+        isDarkMode: isDarkMode,
+        onThemeChanged: findTheme,
+      ),
     );
   }
 }
+
