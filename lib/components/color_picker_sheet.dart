@@ -31,7 +31,6 @@ class _ColorPickerSheetState extends State<ColorPickerSheet> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // Заголовок
             Text(
               "Select App Color",
               style: Theme.of(context).textTheme.titleLarge,
@@ -39,7 +38,6 @@ class _ColorPickerSheetState extends State<ColorPickerSheet> {
 
             const SizedBox(height: 24),
 
-            // Picker займає весь доступний простір
             Expanded(
               child: SingleChildScrollView(
                 child: ColorPicker(
@@ -57,7 +55,6 @@ class _ColorPickerSheetState extends State<ColorPickerSheet> {
 
             const SizedBox(height: 16),
 
-            // Кнопка Apply
             SizedBox(
               width: double.infinity,
               child: FilledButton(

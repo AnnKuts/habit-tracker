@@ -23,28 +23,25 @@ class MonthlySummary extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Stack(
-        children: [
-          HeatMap(
-            startDate: createDataTimeObject(startDate),
-            endDate: DateTime.now().add(const Duration(days: 0)),
-            datasets: datasets,
-            colorMode: ColorMode.color,
-            defaultColor: Colors.grey[200],
-            textColor: Colors.black,
-            showColorTip: false,
-            showText: true,
-            scrollable: true,
-            size: 30,
-            onClick: (date) {
-              if (onDateTapped != null) {
-                onDateTapped!(date);
-              }
-            },
-            colorsets: HeatmapColorBuilder.fromColorScheme(scheme),
-          ),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: HeatMap(
+        startDate: createDataTimeObject(startDate),
+        endDate: DateTime.now(),
+        datasets: datasets,
+        colorMode: ColorMode.color,
+        defaultColor: scheme.surfaceContainerHighest.withOpacity(0.3),
+        textColor: scheme.onSurface,
+        showColorTip: false,
+        showText: true,
+        scrollable: true,
+        size: 24,
+        fontSize: 10,
+        onClick: (date) {
+          if (onDateTapped != null) {
+            onDateTapped!(date);
+          }
+        },
+        colorsets: HeatmapColorBuilder.fromColorScheme(scheme),
       ),
     );
   }

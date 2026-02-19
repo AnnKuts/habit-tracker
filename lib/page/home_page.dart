@@ -9,6 +9,7 @@ import '../components/month_summary.dart';
 import '../utils/habit_validator.dart';
 import '../utils/time_converter.dart';
 import '../widgets/home_page_widgets.dart';
+import '../widgets/streak_card.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -173,15 +174,19 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
   int _calculateItemCount() {
     final habitCount = currentHabits.length;
     final hasSelectedDate = selectedDate != null;
-    return habitCount + (hasSelectedDate ? 2 : 1);
+    return habitCount + (hasSelectedDate ? 3 : 2);
   }
 
   Widget _buildListItem(int index) {
     if (index == 0) {
+      return const StreakCard(streakDays: 9);
+    }
+
+    if (index == 1) {
       return _buildCalendar();
     }
 
-    if (index == 1 && selectedDate != null) {
+    if (index == 2 && selectedDate != null) {
       return HomePageWidgets.buildSelectedDateCard(
         context: context,
         date: selectedDate!,
@@ -189,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       );
     }
 
-    final habitIndex = selectedDate != null ? index - 2 : index - 1;
+    final habitIndex = selectedDate != null ? index - 3 : index - 2;
     if (habitIndex >= 0 && habitIndex < currentHabits.length) {
       return _buildHabitItem(habitIndex);
     }
