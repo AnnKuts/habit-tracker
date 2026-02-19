@@ -179,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
 
   Widget _buildListItem(int index) {
     if (index == 0) {
-      return const StreakCard(streakDays: 9);
+      return StreakCard(streakDays: habitStorage.calculateStreak());
     }
 
     if (index == 1) {

@@ -57,26 +57,6 @@ class HabitLocalStorage {
         date.day == now.day;
   }
 
-  void calculateHabitPercentage(
-    List<List<dynamic>> todaysHabitList, [
-    String? dateKey,
-  ]) {
-    int countCompleted = 0;
-
-    for (int i = 0; i < todaysHabitList.length; i++) {
-      if (todaysHabitList[i][2] == true) {
-        countCompleted++;
-      }
-    }
-
-    final percent = todaysHabitList.isEmpty
-        ? '0.0'
-        : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
-
-    final key = dateKey ?? todaysDateFormatted();
-    _box.put('PERCENTAGE_SUMMARY_$key', percent);
-  }
-
   void saveHabits(List<Habit> habits) {
     final data = habits.map((h) => h.toList()).toList();
     _box.put(_habitsKey, data);
@@ -124,21 +104,22 @@ class HabitLocalStorage {
     updateHeatMapForDate(normalizedDate, dateKey);
   }
 
-  // void calculateHabitPercentage(List<List<dynamic>> todaysHabitList) {
-  //   int countCompleted = 0;
-  //
-  //   for (int i = 0; i < todaysHabitList.length; i++) {
-  //     if (todaysHabitList[i][2] == true) {
-  //       countCompleted++;
-  //     }
-  //   }
-  //
-  //   final percent = todaysHabitList.isEmpty
-  //       ? '0.0'
-  //       : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
-  //
-  //   _box.put('PERCENTAGE_SUMMARY_${todaysDateFormatted()}', percent);
-  // }
+  void calculateHabitPercentage(List<List<dynamic>> todaysHabitList, [String? dateKey]) {
+    int countCompleted = 0;
+
+    for (int i = 0; i < todaysHabitList.length; i++) {
+      if (todaysHabitList[i][2] == true) {
+        countCompleted++;
+      }
+    }
+
+    final percent = todaysHabitList.isEmpty
+        ? '0.0'
+        : (countCompleted / todaysHabitList.length).toStringAsFixed(1);
+
+    final key = dateKey ?? todaysDateFormatted();
+    _box.put('PERCENTAGE_SUMMARY_$key', percent);
+  }
 
   void loadHeatMap() {
     heatMapDataSet.clear();
@@ -172,5 +153,71 @@ class HabitLocalStorage {
     final double percent = double.parse(percentString);
     final DateTime normalizedDate = DateTime(date.year, date.month, date.day);
     heatMapDataSet[normalizedDate] = (percent * 10).toInt();
+  }
+
+  int calculateStreak() {
+    int streak = 0;
+    DateTime today = DateTime.now();
+    DateTime current = DateTime(today.year, today.month, today.day);
+
+    while (true) {
+      String key = dateTimeToString(current);
+      String percentString = _box.get('PERCENTAGE_SUMMARY_$key') ?? '0.0';
+      double percent = double.parse(percentString);
+
+      if (percent >= 0.5) {
+        streak++;
+      } else if (current.isAtSameMomentAs(
+        DateTime(today.year, today.month, today.day),
+      )) {
+      } else {
+        break;
+      }
+      current = current.subtract(const Duration(days: 1));
+    }
+    return streak;
+  }
+
+  //add usage later
+  int getBestStreak() {
+    int maxStreak = 0;
+    int currentStreak = 0;
+
+    DateTime start = createDataTimeObject(getStartDate());
+    DateTime today = DateTime.now();
+    DateTime end = DateTime(today.year, today.month, today.day);
+
+    DateTime current = start;
+    while (!current.isAfter(end)) {
+      String key = dateTimeToString(current);
+      String percentString = _box.get('PERCENTAGE_SUMMARY_$key') ?? '0.0';
+      double percent = double.parse(percentString);
+
+      if (percent >= 0.5) {
+        currentStreak++;
+        if (currentStreak > maxStreak) maxStreak = currentStreak;
+      } else {
+        currentStreak = 0;
+      }
+      current = current.add(const Duration(days: 1));
+    }
+    return maxStreak;
+  }
+
+  int getTotalCompletedDays() {
+    int total = 0;
+    DateTime start = createDataTimeObject(getStartDate());
+    DateTime today = DateTime.now();
+
+    DateTime current = start;
+    while (!current.isAfter(today)) {
+      String key = dateTimeToString(current);
+      String percentString = _box.get('PERCENTAGE_SUMMARY_$key') ?? '0.0';
+      if (double.parse(percentString) >= 0.5) {
+        total++;
+      }
+      current = current.add(const Duration(days: 1));
+    }
+    return total;
   }
 }

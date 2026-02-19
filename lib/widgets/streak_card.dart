@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import '../page/streak_details_screen.dart';
 
 class StreakCard extends StatelessWidget {
   final int streakDays;
 
-  const StreakCard({
-    super.key,
-    required this.streakDays,
-  });
+  const StreakCard({super.key, required this.streakDays});
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +26,55 @@ class StreakCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: scheme.onPrimaryContainer.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.local_fire_department_rounded,
-              size: 48,
-              color: scheme.primary,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      StreakDetailsScreen(streakDays: streakDays),
+                ),
+              );
+            },
+            child: Hero(
+              tag: 'streak_fire_gold',
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: scheme.primary.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.local_fire_department_rounded,
+                        size: 34,
+                        color: scheme.primary,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: scheme.primary,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '$streakDays',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                          color: scheme.onPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 20),

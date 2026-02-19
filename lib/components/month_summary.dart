@@ -34,7 +34,7 @@ class MonthlySummary extends StatelessWidget {
         showColorTip: false,
         showText: true,
         scrollable: true,
-        size: 24,
+        size: 20,
         fontSize: 10,
         onClick: (date) {
           if (onDateTapped != null) {
