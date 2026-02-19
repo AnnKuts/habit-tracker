@@ -10,10 +10,23 @@ import '../utils/habit_validator.dart';
 import '../utils/time_converter.dart';
 import '../widgets/home_page_widgets.dart';
 import '../widgets/streak_card.dart';
+import '../page/settings_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
-  const MyHomePage({super.key, required this.title});
+  final bool isDarkMode;
+  final Function(bool) onThemeChanged;
+  final Color appColor;
+  final Function(Color) onColorChanged;
+
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.isDarkMode,
+    required this.onThemeChanged,
+    required this.appColor,
+    required this.onColorChanged,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -157,20 +170,6 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      backgroundColor: scheme.surface,
-      floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
-      body: ListView.builder(
-        itemCount: _calculateItemCount(),
-        itemBuilder: (context, index) => _buildListItem(index),
-      ),
-    );
-  }
-
   int _calculateItemCount() {
     final habitCount = currentHabits.length;
     final hasSelectedDate = selectedDate != null;
@@ -217,6 +216,72 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
       onChanged: (value) => checkBoxTapped(value, index),
       settingsTapped: (context) => editHabit(index),
       deleteTapped: (context) => deleteHabit(index),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: scheme.onSurface),
+      ),
+      drawer: Drawer(
+        backgroundColor: scheme.surface,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: scheme.primaryContainer,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    'Menu',
+                    style: TextStyle(
+                      color: scheme.onPrimaryContainer,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, color: scheme.onSurfaceVariant),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(
+                      title: 'Settings',
+                      isDarkMode: widget.isDarkMode,
+                      onThemeChanged: widget.onThemeChanged,
+                      appColor: widget.appColor,
+                      onColorChanged: widget.onColorChanged,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
+      body: ListView.builder(
+        itemCount: _calculateItemCount(),
+        itemBuilder: (context, index) => _buildListItem(index),
+      ),
     );
   }
 }

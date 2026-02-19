@@ -29,7 +29,13 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          const MyHomePage(title: 'Habit Tracker'),
+          MyHomePage(
+            title: 'Habit Tracker',
+            isDarkMode: widget.isDarkMode,
+            onThemeChanged: widget.onThemeChanged,
+            appColor: widget.appColor,
+            onColorChanged: widget.onColorChanged,
+          ),
           SettingsPage(
             title: 'Settings',
             isDarkMode: widget.isDarkMode,
