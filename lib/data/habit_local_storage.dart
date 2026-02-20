@@ -104,7 +104,10 @@ class HabitLocalStorage {
     updateHeatMapForDate(normalizedDate, dateKey);
   }
 
-  void calculateHabitPercentage(List<List<dynamic>> todaysHabitList, [String? dateKey]) {
+  void calculateHabitPercentage(
+    List<List<dynamic>> todaysHabitList, [
+    String? dateKey,
+  ]) {
     int countCompleted = 0;
 
     for (int i = 0; i < todaysHabitList.length; i++) {

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
 class StreakDetailsScreen extends StatelessWidget {
-
   final int streakDays;
 
-  const StreakDetailsScreen({
-    super.key,
-    required this.streakDays,
-  });
+  const StreakDetailsScreen({super.key, required this.streakDays});
 
   @override
   Widget build(BuildContext context) {

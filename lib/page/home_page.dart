@@ -14,19 +14,8 @@ import '../page/settings_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
-  final bool isDarkMode;
-  final Function(bool) onThemeChanged;
-  final Color appColor;
-  final Function(Color) onColorChanged;
 
-  const MyHomePage({
-    super.key,
-    required this.title,
-    required this.isDarkMode,
-    required this.onThemeChanged,
-    required this.appColor,
-    required this.onColorChanged,
-  });
+  const MyHomePage({super.key, required this.title});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -231,7 +220,6 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
         elevation: 0,
         iconTheme: IconThemeData(color: scheme.onSurface),
       ),
-
       drawer: NavigationDrawer(
         onDestinationSelected: (int index) {
           Navigator.pop(context);
@@ -240,13 +228,7 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SettingsPage(
-                  title: 'Settings',
-                  isDarkMode: widget.isDarkMode,
-                  onThemeChanged: widget.onThemeChanged,
-                  appColor: widget.appColor,
-                  onColorChanged: widget.onColorChanged,
-                ),
+                builder: (context) => const SettingsPage(title: 'Settings'),
               ),
             );
           }
@@ -272,7 +254,6 @@ class _MyHomePageState extends State<MyHomePage> with Loggable {
           ),
         ],
       ),
-
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
       body: ListView.builder(
         itemCount: _calculateItemCount(),

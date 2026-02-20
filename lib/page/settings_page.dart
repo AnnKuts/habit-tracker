@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:habit_tracker/components/color_picker_sheet.dart';
+import 'package:habit_tracker/models/settings_model.dart';
 
 class SettingsPage extends StatelessWidget {
   final String title;
-  final bool isDarkMode;
-  final Function(bool) onThemeChanged;
-  final Color appColor;
-  final Function(Color) onColorChanged;
 
-  const SettingsPage({
-    super.key,
-    required this.title,
-    required this.isDarkMode,
-    required this.onThemeChanged,
-    required this.appColor,
-    required this.onColorChanged,
-  });
+  const SettingsPage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsModel>(context);
+    final appColor = settings.seedColor;
+
     final brightness = ThemeData.estimateBrightnessForColor(appColor);
     final scheme = Theme.of(context).colorScheme;
 
@@ -34,8 +29,13 @@ class SettingsPage extends StatelessWidget {
         children: [
           SwitchListTile(
             title: const Text('Dark Mode'),
-            value: isDarkMode,
-            onChanged: onThemeChanged,
+            value: settings.isDarkMode,
+            onChanged: (value) {
+              Provider.of<SettingsModel>(
+                context,
+                listen: false,
+              ).setDarkMode(value);
+            },
           ),
 
           const SizedBox(height: 12),
@@ -57,12 +57,17 @@ class SettingsPage extends StatelessWidget {
                   isScrollControlled: true,
                   useSafeArea: true,
                   showDragHandle: true,
-                  builder: (context) {
+                  builder: (sheetContext) {
                     return FractionallySizedBox(
                       heightFactor: 0.75,
                       child: ColorPickerSheet(
                         currentColor: appColor,
-                        onColorChanged: onColorChanged,
+                        onColorChanged: (color) {
+                          Provider.of<SettingsModel>(
+                            context,
+                            listen: false,
+                          ).setSeedColor(color);
+                        },
                       ),
                     );
                   },

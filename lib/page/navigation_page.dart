@@ -3,18 +3,7 @@ import 'home_page.dart';
 import 'settings_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
-  final bool isDarkMode;
-  final Function(bool) onThemeChanged;
-  final Color appColor;
-  final Function(Color) onColorChanged;
-
-  const MainNavigationPage({
-    super.key,
-    required this.isDarkMode,
-    required this.onThemeChanged,
-    required this.appColor,
-    required this.onColorChanged,
-  });
+  const MainNavigationPage({super.key});
 
   @override
   State<MainNavigationPage> createState() => _MainNavigationPageState();
@@ -28,21 +17,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: [
-          MyHomePage(
-            title: 'Habit Tracker',
-            isDarkMode: widget.isDarkMode,
-            onThemeChanged: widget.onThemeChanged,
-            appColor: widget.appColor,
-            onColorChanged: widget.onColorChanged,
-          ),
-          SettingsPage(
-            title: 'Settings',
-            isDarkMode: widget.isDarkMode,
-            onThemeChanged: widget.onThemeChanged,
-            appColor: widget.appColor,
-            onColorChanged: widget.onColorChanged,
-          ),
+        children: const [
+          MyHomePage(title: 'Habit Tracker'),
+          SettingsPage(title: 'Settings'),
         ],
       ),
       bottomNavigationBar: NavigationBar(
