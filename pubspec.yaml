@@ -19,6 +19,7 @@ dependencies:
   flutter_heatmap_calendar: ^1.0.5
   flutter_colorpicker: ^1.1.0
   provider: ^6.1.5+1
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:
