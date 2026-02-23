@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-
-import 'package:habit_tracker/page/home_page.dart';
-import 'package:habit_tracker/page/settings_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:habit_tracker/page/navigation_page.dart';
 import 'package:habit_tracker/models/settings_model.dart';
 
@@ -11,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('habits_box');
+  await dotenv.load(fileName: ".env");
 
   runApp(
     ChangeNotifierProvider(

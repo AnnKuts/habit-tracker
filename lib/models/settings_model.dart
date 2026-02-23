@@ -12,17 +12,17 @@ class SettingsModel extends ChangeNotifier {
     _loadPreferences();
   }
 
-  Future<void> _loadPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<void> _loadPreferences() {
+    return SharedPreferences.getInstance().then((prefs) {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
 
-    _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      final savedColor =
+          prefs.getInt('seedColor') ?? Colors.pinkAccent.toARGB32();
 
-    final savedColor =
-        prefs.getInt('seedColor') ?? Colors.pinkAccent.toARGB32();
+      _seedColor = Color(savedColor);
 
-    _seedColor = Color(savedColor);
-
-    notifyListeners();
+      notifyListeners();
+    });
   }
 
   Future<void> setDarkMode(bool value) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'settings_page.dart';
+import 'analyze_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -19,6 +20,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         index: _currentIndex,
         children: const [
           MyHomePage(title: 'Habit Tracker'),
+          AnalyzePage(),
           SettingsPage(title: 'Settings'),
         ],
       ),
@@ -34,6 +36,11 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
             label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.analytics_outlined),
+            selectedIcon: Icon(Icons.analytics),
+            label: 'Analysis',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
