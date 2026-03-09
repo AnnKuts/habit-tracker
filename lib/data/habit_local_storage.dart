@@ -11,7 +11,17 @@ class HabitLocalStorage {
   List<Habit> getHabits() {
     var raw = _box.get(_habitsKey);
     raw ??= _initDefaults();
-    return (raw as List).map((item) => Habit.fromList(item)).toList();
+    final habits = (raw as List).map((item) => Habit.fromList(item)).toList();
+    final todayKey = todaysDateFormatted();
+    final alreadyResetToday = _box.get('RESET_DATE') == todayKey;
+    if (!alreadyResetToday) {
+      for (final habit in habits) {
+        habit.completed = false;
+      }
+      saveHabits(habits);
+      _box.put('RESET_DATE', todayKey);
+    }
+    return habits;
   }
 
   Map<String, Habit> getHabitsAsMap() {
