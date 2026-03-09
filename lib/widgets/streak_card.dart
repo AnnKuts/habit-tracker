@@ -18,7 +18,7 @@ class StreakCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: scheme.shadow.withOpacity(0.05),
+            color: scheme.shadow.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -27,13 +27,18 @@ class StreakCard extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
+            onTap: () async {
+              final result = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) =>
                       StreakDetailsScreen(streakDays: streakDays),
                 ),
               );
+              if (result == true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Keep the streak going!')),
+                );
+              }
             },
             child: Hero(
               tag: 'streak_fire_gold',
@@ -44,7 +49,7 @@ class StreakCard extends StatelessWidget {
                     width: 54,
                     height: 54,
                     decoration: BoxDecoration(
-                      color: scheme.primary.withOpacity(0.12),
+                      color: scheme.primary.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -89,7 +94,7 @@ class StreakCard extends StatelessWidget {
                 Text(
                   'Your streak:',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: scheme.onPrimaryContainer.withOpacity(0.7),
+                    color: scheme.onPrimaryContainer.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -4,12 +4,15 @@ import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:habit_tracker/page/navigation_page.dart';
 import 'package:habit_tracker/models/settings_model.dart';
+import 'package:habit_tracker/page/home_page.dart';
+import 'package:habit_tracker/page/settings_page.dart';
+import 'package:habit_tracker/page/analyze_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('habits_box');
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: '.env');
 
   runApp(
     ChangeNotifierProvider(
@@ -43,15 +46,12 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           themeMode: settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-
-          // home: MyHomePage(title: 'Habit Tracker'),
-          // home: SettingsPage(
-          //   title: 'Settings',
-          //   isDarkMode: isDarkMode,
-          //   onThemeChanged: findTheme,
-          //   appColor: seedColor,
-          //   onColorChanged: changeColor,
-          home: const MainNavigationPage(),
+          routes: {
+            '/': (context) => const MainNavigationPage(),
+            '/settings': (context) => const SettingsPage(title: 'Settings'),
+            '/analyze': (context) => const AnalyzePage(),
+            '/home': (context) => const MyHomePage(title: 'Habit Tracker'),
+          },
         );
       },
     );

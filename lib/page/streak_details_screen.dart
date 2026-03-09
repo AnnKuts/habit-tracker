@@ -36,7 +36,7 @@ class StreakDetailsScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: scheme.primary.withOpacity(0.35),
+                        color: scheme.primary.withValues(alpha: 0.35),
                         blurRadius: 60,
                         spreadRadius: 2,
                       ),
@@ -69,7 +69,7 @@ class StreakDetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 56),
               FilledButton.tonal(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(true),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(200, 56),
                   shape: RoundedRectangleBorder(

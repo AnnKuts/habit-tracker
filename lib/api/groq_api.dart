@@ -17,9 +17,9 @@ class GroqApi {
         if (_apiKey.isNotEmpty) 'Authorization': 'Bearer $_apiKey',
       },
       body: jsonEncode({
-        "model": "llama-3.1-8b-instant",
-        "messages": [
-          {"role": "user", "content": prompt},
+        'model': 'llama-3.1-8b-instant',
+        'messages': [
+          {'role': 'user', 'content': prompt},
         ],
       }),
     );
