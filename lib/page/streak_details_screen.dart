@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/animated_streak_fire.dart';
 
 class StreakDetailsScreen extends StatelessWidget {
   final int streakDays;
@@ -21,67 +22,57 @@ class StreakDetailsScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Hero(
-                tag: 'streak_fire_gold',
-                createRectTween: (begin, end) {
-                  return MaterialRectArcTween(begin: begin, end: end);
-                },
-                child: Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
                   width: 260,
                   height: 260,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: scheme.primary.withValues(alpha: 0.35),
-                        blurRadius: 60,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.local_fire_department_rounded,
-                    size: 180,
-                    color: scheme.primary,
+                  child: Hero(
+                    tag: 'streak_fire_gold',
+                    createRectTween: (begin, end) {
+                      return MaterialRectArcTween(begin: begin, end: end);
+                    },
+                    child: const AnimatedStreakFire(),
                   ),
                 ),
-              ),
-              const SizedBox(height: 48),
-              Text(
-                '$streakDays Day Streak',
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: scheme.onSurface,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _buildMotivationText(streakDays),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 56),
-              FilledButton.tonal(
-                onPressed: () => Navigator.of(context).pop(true),
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(200, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                const SizedBox(height: 48),
+                Text(
+                  '$streakDays Day Streak',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: scheme.onSurface,
+                    letterSpacing: -0.5,
                   ),
                 ),
-                child: const Text(
-                  'Keep Going',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                const SizedBox(height: 16),
+                Text(
+                  _buildMotivationText(streakDays),
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 56),
+                FilledButton.tonal(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size(200, 56),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: const Text(
+                    'Keep Going',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
